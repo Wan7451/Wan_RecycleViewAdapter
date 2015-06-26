@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements WanAdapter.OnItem
 
         adapter.setOnItemClickListener(this); //设置点击事件
 
-
     }
 
     @Override
