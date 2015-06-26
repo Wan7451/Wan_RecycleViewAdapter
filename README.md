@@ -76,10 +76,7 @@
     }
 
 
-注意: 需要添加样式设置  分割线的显示效果
+注意: 需要主题中添加样式，  设置分割线的显示效果
 
- <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- ################################################ -->
-        <!-- 分割线的样式有这里定义。  一般都是Drawable -->
-        <item name="android:listDivider">@drawable/divider</item>
- </style>
+   <!-- 分割线的样式有这里定义。  一般都是Drawable -->
+   <item name="android:listDivider">@drawable/divider</item>
