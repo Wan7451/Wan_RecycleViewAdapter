@@ -78,5 +78,7 @@
 
 注意: 需要主题中添加样式，  设置分割线的显示效果
 
-   <!-- 分割线的样式有这里定义。  一般都是Drawable -->
-   <item name="android:listDivider">@drawable/divider</item>
+ <style>
+        <!-- 分割线的样式有这里定义。  一般都是Drawable -->
+        <item name="android:listDivider">@drawable/divider</item>
+ </style>
