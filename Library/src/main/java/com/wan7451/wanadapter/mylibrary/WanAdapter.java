@@ -31,6 +31,7 @@ public abstract class WanAdapter<T> extends RecyclerView.Adapter<WanViewHolder> 
     protected List<T> mDatas;
     protected final int mItemLayoutId;
 
+
     /**
      * 构造器
      *
@@ -196,6 +197,10 @@ public abstract class WanAdapter<T> extends RecyclerView.Adapter<WanViewHolder> 
         return getAdvanceCount();
     }
 
+    public void setDatas(List<T> mDatas) {
+        this.mDatas = mDatas;
+        notifyDataSetChanged();
+    }
 
     public int getHeaderViewsCount() {
         return mHeaderViews.size();

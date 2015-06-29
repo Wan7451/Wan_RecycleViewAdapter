@@ -83,3 +83,6 @@
         <!-- 分割线的样式有这里定义。  一般都是Drawable -->
         <item name="android:listDivider">@drawable/divider</item>
  </style>
+
+我的博客
+  http://blog.csdn.net/mr_wanggang/article/details/46649235
