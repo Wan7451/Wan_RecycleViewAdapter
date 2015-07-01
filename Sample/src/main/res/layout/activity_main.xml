@@ -5,7 +5,7 @@
     tools:context=".MainActivity">
 
     <!-- RecycleView 的高度不能定义为 wrap_contnet  除非你要重新计算他的高度 -->
-    <android.support.v7.widget.RecyclerView
+    <com.wan7451.wanadapter.mylibrary.WanRecycleView
         android:id="@+id/mianView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

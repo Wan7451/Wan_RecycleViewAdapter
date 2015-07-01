@@ -1,6 +1,7 @@
 package com.wanadapter.wan7451.wan_recycleviewadapter;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,8 +13,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.wan7451.wanadapter.mylibrary.WanAdapter;
 import com.wan7451.wanadapter.mylibrary.WanItemDecoration;
+import com.wan7451.wanadapter.mylibrary.WanRecycleView;
 import com.wan7451.wanadapter.mylibrary.WanViewHolder;
 
 import java.util.ArrayList;
@@ -30,10 +33,10 @@ public class MainActivity extends AppCompatActivity implements WanAdapter.OnItem
         for (int i = 0; i < 100; i++) {
             data.add("Item" + i);
         }
-        RecyclerView mainView = (RecyclerView) findViewById(R.id.mianView);
+        final WanRecycleView mainView = (WanRecycleView) findViewById(R.id.mianView);
 
         WGAdapter adapter = new WGAdapter(this, data, android.R.layout.simple_list_item_1);
-        mainView.setAdapter(adapter);
+        mainView.getRefreshableView().setAdapter(adapter);
 
 
         ImageView headerView = new ImageView(this);
@@ -53,12 +56,39 @@ public class MainActivity extends AppCompatActivity implements WanAdapter.OnItem
         item.setMarginLeftDP(10);   //分割线左边距
         item.setMarginRightDP(10);  //分割线右边距
 
-        mainView.addItemDecoration(item);  //添加分割线
+        mainView.getRefreshableView().addItemDecoration(item);  //添加分割线
 
-        mainView.setLayoutManager(new LinearLayoutManager(this));
+        mainView.getRefreshableView().setLayoutManager(new LinearLayoutManager(this));
 
         adapter.setOnItemClickListener(this); //设置点击事件
 
+        mainView.setScrollingWhileRefreshingEnabled(true);
+        mainView.setMode(PullToRefreshBase.Mode.BOTH);
+        mainView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<RecyclerView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
+                Toast.makeText(MainActivity.this, "下拉刷新", Toast.LENGTH_SHORT).show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        mainView.onRefreshComplete();
+                    }
+                }, 4000);
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
+                Toast.makeText(MainActivity.this, "上拉加载", Toast.LENGTH_SHORT).show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        mainView.onRefreshComplete();
+                    }
+                }, 4000);
+            }
+        });
     }
 
     @Override
