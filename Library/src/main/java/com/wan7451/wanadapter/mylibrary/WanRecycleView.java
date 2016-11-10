@@ -3,7 +3,6 @@ package com.wan7451.wanadapter.mylibrary;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.view.View;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 
@@ -48,9 +47,9 @@ public class WanRecycleView extends PullToRefreshBase<RecyclerView> {
     //3 是否滑动到底部
     @Override
     protected boolean isReadyForPullEnd() {
-        View view = getRefreshableView().getChildAt(getRefreshableView().getChildCount() - 1);
-        if (null != view) {
-            return getRefreshableView().getBottom() >= view.getBottom();
+        int lastVisiblePosition = getRefreshableView().getChildAdapterPosition(getRefreshableView().getChildAt(getRefreshableView().getChildCount() -1));
+        if (lastVisiblePosition >= getRefreshableView().getAdapter().getItemCount()-1) {
+            return getRefreshableView().getChildAt(getRefreshableView().getChildCount() - 1).getBottom() <= getRefreshableView().getBottom();
         }
         return false;
     }
@@ -59,12 +58,13 @@ public class WanRecycleView extends PullToRefreshBase<RecyclerView> {
     //4 是否滑动到顶部
     @Override
     protected boolean isReadyForPullStart() {
-        View view = getRefreshableView().getChildAt(0);
-
-        if (view != null) {
-            return view.getTop() >= getRefreshableView().getTop();
-        }
-        return false;
+        if (getRefreshableView().getChildCount() <= 0)
+            return true;
+        int firstVisiblePosition = getRefreshableView().getChildAdapterPosition(getRefreshableView().getChildAt(0));
+        if (firstVisiblePosition == 0)
+            return getRefreshableView().getChildAt(0).getTop() == getRefreshableView().getPaddingTop();
+        else
+            return false;
     }
 
 

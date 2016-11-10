@@ -1,13 +1,11 @@
 package com.wanadapter.wan7451.wan_recycleviewadapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,18 +22,19 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements WanAdapter.OnItemClickListener {
 
-    ArrayList<String> data = new ArrayList<>();
+    private ArrayList<String> data = new ArrayList<>();
+    private WGAdapter adapter;
+    private WanRecycleView mainView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        for (int i = 0; i < 100; i++) {
-            data.add("Item" + i);
-        }
-        final WanRecycleView mainView = (WanRecycleView) findViewById(R.id.mianView);
 
-        WGAdapter adapter = new WGAdapter(this, data, android.R.layout.simple_list_item_1);
+        mainView = (WanRecycleView) findViewById(R.id.mianView);
+
+        adapter = new WGAdapter(this, data, android.R.layout.simple_list_item_1);
         mainView.getRefreshableView().setAdapter(adapter);
 
 
@@ -67,28 +66,47 @@ public class MainActivity extends AppCompatActivity implements WanAdapter.OnItem
         mainView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<RecyclerView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
-                Toast.makeText(MainActivity.this, "下拉刷新", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, "下拉刷新", Toast.LENGTH_SHORT).show();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-
+                        data.clear();
+                        for (int i = 0; i < 10; i++) {
+                            data.add("Item" + i);
+                        }
+                        adapter.notifyDataSetChanged();
                         mainView.onRefreshComplete();
                     }
-                }, 4000);
+                }, 2000);
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<RecyclerView> refreshView) {
-                Toast.makeText(MainActivity.this, "上拉加载", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, "上拉加载", Toast.LENGTH_SHORT).show();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-
+                        for (int i = 0; i < 10; i++) {
+                            data.add("Item" + data.size());
+                        }
+                        adapter.notifyDataSetChanged();
                         mainView.onRefreshComplete();
                     }
-                }, 4000);
+                }, 2000);
             }
         });
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mainView.setRefreshing();
+            }
+        }, 300);
     }
 
     @Override
@@ -115,6 +133,5 @@ public class MainActivity extends AppCompatActivity implements WanAdapter.OnItem
             text.setText(item);
         }
     }
-
 
 }
