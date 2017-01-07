@@ -21,15 +21,17 @@ public abstract class WanAdapter<T> extends RecyclerView.Adapter<WanViewHolder> 
     private ArrayList<View> mHeaderViews = new ArrayList<>(); //头视图
     private ArrayList<View> mFooterViews = new ArrayList<>();   //尾视图
 
-
     private ArrayList<Integer> mHeaderViewTypes = new ArrayList<>();
     private ArrayList<Integer> mFooterViewTypes = new ArrayList<>();
+
+    private static final int TYPE_OFFSET = 29175;
 
 
     protected LayoutInflater mInflater;
     protected Context mContext;
     protected List<T> mDatas;
     protected final int mItemLayoutId;
+
 
 
     /**
@@ -45,6 +47,160 @@ public abstract class WanAdapter<T> extends RecyclerView.Adapter<WanViewHolder> 
         this.mDatas = mDatas;
         this.mItemLayoutId = itemLayoutId;
     }
+
+
+    @Override
+    public int getItemViewType(int position) {
+        if (mHeaderViews.size() > 0 && position < mHeaderViews.size()) {
+            //返回 HeaderView 的 ViewType
+            return getHeaderViewType(position);
+        }
+
+        if (mFooterViews.size() > 0 && position > getDataCount() - 1 + mHeaderViews.size()) {
+            //返回 FooterView 的 ViewType标记
+            return getFooterViewType(position);
+        }
+
+        if (mHeaderViews.size() > 0) {
+            return getViewType(position - mHeaderViews.size());
+        }
+        return getViewType(position);
+    }
+
+
+    private int getHeaderViewType(int position) {
+        mHeaderViewTypes.add(position + TYPE_OFFSET);
+        return position + TYPE_OFFSET;
+    }
+
+    private int getHeaderViewPosition(int viewType) {
+        if (mHeaderViewTypes.contains(viewType)) {
+            return viewType - TYPE_OFFSET;
+        }
+        return -1;
+    }
+
+    private int getFooterViewType(int position) {
+        mFooterViewTypes.add(position + TYPE_OFFSET);
+        return position + TYPE_OFFSET;
+    }
+
+    private int getFooterViewPosition(int viewType) {
+        if (mFooterViewTypes.contains(viewType)) {
+            return viewType - TYPE_OFFSET;
+        }
+        return -1;
+    }
+
+
+
+    /**
+     * Item页布局类型个数，默认为1
+     * @param position
+     * @return
+     */
+    protected int getViewType(int position) {
+        return 1;
+    }
+
+    private int getDataCount() {
+        return mDatas != null ? mDatas.size() : 0;
+    }
+
+    private void onBindWanViewHolder(WanViewHolder holder, int i) {
+        convert(holder, mDatas.get(i));
+    }
+
+    /**
+     * 设置每个页面显示的内容
+     *
+     * @param holder itemHolder
+     * @param item   每一Item显示的数据
+     */
+    public abstract void convert(WanViewHolder holder, T item);
+
+
+
+    /**
+     * 创建ViewHolder
+     *
+     * @param parent   RecycleView对象
+     * @param viewType viee类型
+     * @return Holder对象
+     */
+    private WanViewHolder onCreateWanViewHolder(ViewGroup parent, int viewType) {
+        View v = mInflater.inflate(mItemLayoutId, null, false);
+        return new WanViewHolder(v, this);
+    }
+
+    @Override
+    public WanViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        int headerPosition = getHeaderViewPosition(viewType);
+        if (headerPosition != -1) {
+            return new HeaderHolder(mHeaderViews.get(headerPosition));
+        }
+
+        int footerPosition = getFooterViewPosition(viewType);
+        if (footerPosition != -1) {
+            int index = footerPosition - getDataCount() - mHeaderViews.size();
+            return new FooterHolder(mFooterViews.get(index));
+        }
+
+        return onCreateWanViewHolder(parent, viewType);
+    }
+
+    @Override
+    public void onBindViewHolder(WanViewHolder holder, int position) {
+
+        if (mFooterViews.size() > 0 && (position > getDataCount() - 1 + mHeaderViews.size())) {
+            return;
+        }
+
+        if (mHeaderViews.size() > 0) {
+            if (position < mHeaderViews.size()) {
+                return;
+            }
+            onBindWanViewHolder(holder, position - mHeaderViews.size());
+            return;
+        }
+        onBindWanViewHolder(holder, position);
+    }
+
+
+    class HeaderHolder extends WanViewHolder {
+
+        public HeaderHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
+    class FooterHolder extends WanViewHolder {
+        public FooterHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        if (mHeaderViews.size() > 0 && mFooterViews.size() > 0) {
+            return getDataCount() + mHeaderViews.size() + mFooterViews.size();
+        }
+        if (mHeaderViews.size() > 0) {
+            return getDataCount() + mHeaderViews.size();
+        }
+        if (mFooterViews.size() > 0) {
+            return getDataCount() + mFooterViews.size();
+        }
+
+        return getDataCount();
+    }
+
+    public void setDatas(List<T> mDatas) {
+        this.mDatas = mDatas;
+        notifyDataSetChanged();
+    }
+
 
     /**
      * 可以添加多个头视图
@@ -64,143 +220,6 @@ public abstract class WanAdapter<T> extends RecyclerView.Adapter<WanViewHolder> 
         mFooterViews.add(footerView);
     }
 
-    @Override
-    public int getItemViewType(int position) {
-
-        if (mHeaderViews.size() > 0 && position < mHeaderViews.size()) {
-            //用position作为HeaderView 的   ViewType标记
-            //记录每个ViewType标记
-            mHeaderViewTypes.add(position * 100000);
-            return position * 100000;
-        }
-
-        if (mFooterViews.size() > 0 && position > getAdvanceCount() - 1 + mHeaderViews.size()) {
-            //用position作为FooterView 的   ViewType标记
-            //记录每个ViewType标记
-            mFooterViewTypes.add(position * 100000);
-            return position * 100000;
-        }
-
-        if (mHeaderViews.size() > 0) {
-            return getAdvanceViewType(position - mHeaderViews.size());
-        }
-
-
-        return getAdvanceViewType(position);
-    }
-
-    /**
-     * Item页布局类型个数，默认为1
-     * ！！！！不能返回0！！！！
-     *
-     * @param position
-     * @return 不能放为0！！
-     */
-    public int getAdvanceViewType(int position) {
-        return 1;
-    }
-
-    private int getAdvanceCount() {
-        if (mDatas != null) {
-            return mDatas.size();
-        }
-        return 0;
-    }
-
-    private void onBindAdvanceViewHolder(WanViewHolder holder, int i) {
-        convert(holder, mDatas.get(i));
-    }
-
-    /**
-     * 设置每个页面显示的内容
-     *
-     * @param holder itemHolder
-     * @param item   每一Item显示的数据
-     */
-    public abstract void convert(WanViewHolder holder, T item);
-
-
-    /**
-     * 创建ViewHolder
-     *
-     * @param parent   RecycleView对象
-     * @param viewType viee类型
-     * @return Holder对象
-     */
-    protected WanViewHolder onCreateAdvanceViewHolder(ViewGroup parent, int viewType) {
-
-        View v = mInflater.inflate(mItemLayoutId, null);
-        return new WanViewHolder(v, this);
-    }
-
-    @Override
-    public WanViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-
-        if (mHeaderViewTypes.contains(viewType)) {
-            return new HeaderHolder(mHeaderViews.get(viewType / 100000));
-        }
-
-        if (mFooterViewTypes.contains(viewType)) {
-            int index = viewType / 100000 - getAdvanceCount() - mHeaderViews.size();
-            return new FooterHolder(mFooterViews.get(index));
-        }
-
-        return onCreateAdvanceViewHolder(parent, viewType);
-    }
-
-    @Override
-    public void onBindViewHolder(WanViewHolder holder, int position) {
-
-        if (mFooterViews.size() > 0 && (position > getAdvanceCount() - 1 + mHeaderViews.size())) {
-            return;
-        }
-
-
-        if (mHeaderViews.size() > 0) {
-            if (position < mHeaderViews.size()) {
-                return;
-            }
-            onBindAdvanceViewHolder(holder, position - mHeaderViews.size());
-            return;
-        }
-        onBindAdvanceViewHolder(holder, position);
-    }
-
-
-    class HeaderHolder extends WanViewHolder {
-
-        public HeaderHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
-    class FooterHolder extends WanViewHolder {
-
-        public FooterHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
-    @Override
-    public int getItemCount() {
-        if (mHeaderViews.size() > 0 && mFooterViews.size() > 0) {
-            return getAdvanceCount() + mHeaderViews.size() + mFooterViews.size();
-        }
-        if (mHeaderViews.size() > 0) {
-            return getAdvanceCount() + mHeaderViews.size();
-        }
-        if (mFooterViews.size() > 0) {
-            return getAdvanceCount() + mFooterViews.size();
-        }
-
-        return getAdvanceCount();
-    }
-
-    public void setDatas(List<T> mDatas) {
-        this.mDatas = mDatas;
-        notifyDataSetChanged();
-    }
 
     public int getHeaderViewsCount() {
         return mHeaderViews.size();
@@ -211,10 +230,9 @@ public abstract class WanAdapter<T> extends RecyclerView.Adapter<WanViewHolder> 
     }
 
 
-    protected OnItemClickListener l;
+    private OnItemClickListener l;
 
-
-    public OnItemClickListener getItemClickListener() {
+    protected OnItemClickListener getItemClickListener() {
         return l;
     }
 

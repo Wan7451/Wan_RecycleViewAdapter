@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.concurrent.Executor;
 
 
 /**
@@ -15,24 +14,19 @@ import java.util.concurrent.Executor;
  * Created by WangGang on 2015/6/27.
  */
 public class WanViewHolder extends RecyclerView.ViewHolder {
-    private SparseArray<View> mViews;
-    private View mConvertView;
-    private WanAdapter adapter;
+    private final SparseArray<View> mViews;
+    private final View mConvertView;
 
     //初始化的设置
     protected WanViewHolder(View itemView) {
         super(itemView);
         //ItemView沾满屏幕宽度，LayoutInflater默认包裹内容
-        RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
-        itemView.setLayoutParams(lp);
         this.mViews = new SparseArray<>();
         mConvertView = itemView;
     }
 
     public <T> WanViewHolder(View itemView, final WanAdapter<T> adapter) {
         super(itemView);
-        RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
-        itemView.setLayoutParams(lp);
         this.mViews = new SparseArray<>();
         mConvertView = itemView;
         if (adapter.getItemClickListener() != null) {
@@ -43,11 +37,10 @@ public class WanViewHolder extends RecyclerView.ViewHolder {
                 }
             });
         }
-        this.adapter = adapter;
     }
 
 
-    public View getConvertView() {
+    public View getRootView() {
         return mConvertView;
     }
 
