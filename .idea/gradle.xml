@@ -9,8 +9,8 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/AndroidPullToRefershLibrary" />
-            <option value="$PROJECT_DIR$/Library" />
             <option value="$PROJECT_DIR$/Sample" />
+            <option value="$PROJECT_DIR$/WanAdapter" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

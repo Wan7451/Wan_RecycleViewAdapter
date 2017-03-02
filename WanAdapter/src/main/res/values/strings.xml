@@ -1,4 +1,5 @@
 <resources>
-    <string name="app_name">Library</string>
     <color name="divider_color">#CBB39F</color>
+
+    <item name="recycleView" type="id"/>
 </resources>

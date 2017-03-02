@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 
 /**
- * 可以刷新的RecycleView
  * Created by Hello on 2015/6/30.
  */
 public class WanRecycleView extends PullToRefreshBase<RecyclerView> {
@@ -28,23 +27,18 @@ public class WanRecycleView extends PullToRefreshBase<RecyclerView> {
         super(context, mode, animStyle);
     }
 
-    //重写4个方法
-    //1 滑动方向
     @Override
     public Orientation getPullToRefreshScrollDirection() {
         return Orientation.VERTICAL;
     }
 
-    //重写4个方法
-    //2  滑动的View
     @Override
     protected RecyclerView createRefreshableView(Context context, AttributeSet attrs) {
         RecyclerView view = new RecyclerView(context, attrs);
+        view.setId(R.id.recycleView);
         return view;
     }
 
-    //重写4个方法
-    //3 是否滑动到底部
     @Override
     protected boolean isReadyForPullEnd() {
         int lastVisiblePosition = getRefreshableView().getChildAdapterPosition(getRefreshableView().getChildAt(getRefreshableView().getChildCount() -1));
@@ -54,8 +48,6 @@ public class WanRecycleView extends PullToRefreshBase<RecyclerView> {
         return false;
     }
 
-    //重写4个方法
-    //4 是否滑动到顶部
     @Override
     protected boolean isReadyForPullStart() {
         if (getRefreshableView().getChildCount() <= 0)

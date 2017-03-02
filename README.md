@@ -111,5 +111,12 @@
         <item name="android:listDivider">@drawable/divider</item>
  </style>
 
+
+使用
+
+    compile 'com.wan7451:wanadapter:1.0.1'
+
+
+
 我的博客
   http://blog.csdn.net/mr_wanggang/article/details/46649235

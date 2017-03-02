@@ -196,6 +196,8 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 
 	/**
 	 * @deprecated See {@link #isScrollingWhileRefreshingEnabled()}.
+	 *
+	 * @return  is
 	 */
 	public final boolean isDisableScrollingWhileRefreshing() {
 		return !isScrollingWhileRefreshingEnabled();
@@ -378,7 +380,9 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 
 	/**
 	 * @deprecated See {@link #setScrollingWhileRefreshingEnabled(boolean)}
+	 * @param disableScrollingWhileRefreshing disableScrollingWhileRefreshing
 	 */
+
 	public void setDisableScrollingWhileRefreshing(boolean disableScrollingWhileRefreshing) {
 		setScrollingWhileRefreshingEnabled(!disableScrollingWhileRefreshing);
 	}
@@ -391,6 +395,8 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	/**
 	 * @deprecated You should now call this method on the result of
 	 *             {@link #getLoadingLayoutProxy()}.
+	 *
+	 * @param label label
 	 */
 	public void setLastUpdatedLabel(CharSequence label) {
 		getLoadingLayoutProxy().setLastUpdatedLabel(label);
@@ -399,6 +405,8 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	/**
 	 * @deprecated You should now call this method on the result of
 	 *             {@link #getLoadingLayoutProxy()}.
+	 *
+	 * @param drawable drawable
 	 */
 	public void setLoadingDrawable(Drawable drawable) {
 		getLoadingLayoutProxy().setLoadingDrawable(drawable);
@@ -407,6 +415,9 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	/**
 	 * @deprecated You should now call this method on the result of
 	 *             {@link #getLoadingLayoutProxy(boolean, boolean)}.
+	 *
+	 * @param drawable drawable
+	 * @param mode   mode
 	 */
 	public void setLoadingDrawable(Drawable drawable, Mode mode) {
 		getLoadingLayoutProxy(mode.showHeaderLoadingLayout(), mode.showFooterLoadingLayout()).setLoadingDrawable(
@@ -448,6 +459,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	/**
 	 * @deprecated You should now call this method on the result of
 	 *             {@link #getLoadingLayoutProxy()}.
+	 * @param pullLabel pullLabel
 	 */
 	public void setPullLabel(CharSequence pullLabel) {
 		getLoadingLayoutProxy().setPullLabel(pullLabel);
@@ -456,6 +468,8 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	/**
 	 * @deprecated You should now call this method on the result of
 	 *             {@link #getLoadingLayoutProxy(boolean, boolean)}.
+	 * @param pullLabel pullLabel
+	 * @param mode  mode
 	 */
 	public void setPullLabel(CharSequence pullLabel, Mode mode) {
 		getLoadingLayoutProxy(mode.showHeaderLoadingLayout(), mode.showFooterLoadingLayout()).setPullLabel(pullLabel);
@@ -490,6 +504,8 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	/**
 	 * @deprecated You should now call this method on the result of
 	 *             {@link #getLoadingLayoutProxy()}.
+	 *
+	 * @param refreshingLabel  refreshingLabel
 	 */
 	public void setRefreshingLabel(CharSequence refreshingLabel) {
 		getLoadingLayoutProxy().setRefreshingLabel(refreshingLabel);
@@ -498,6 +514,9 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	/**
 	 * @deprecated You should now call this method on the result of
 	 *             {@link #getLoadingLayoutProxy(boolean, boolean)}.
+	 *
+	 * @param refreshingLabel  refreshingLabel
+	 * @param mode  mode
 	 */
 	public void setRefreshingLabel(CharSequence refreshingLabel, Mode mode) {
 		getLoadingLayoutProxy(mode.showHeaderLoadingLayout(), mode.showFooterLoadingLayout()).setRefreshingLabel(
@@ -507,6 +526,8 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	/**
 	 * @deprecated You should now call this method on the result of
 	 *             {@link #getLoadingLayoutProxy()}.
+	 *
+	 *  @param releaseLabel  releaseLabel
 	 */
 	public void setReleaseLabel(CharSequence releaseLabel) {
 		setReleaseLabel(releaseLabel, Mode.BOTH);
@@ -515,6 +536,9 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	/**
 	 * @deprecated You should now call this method on the result of
 	 *             {@link #getLoadingLayoutProxy(boolean, boolean)}.
+	 *
+	 * @param releaseLabel  releaseLabel
+	 * @param mode  mode
 	 */
 	public void setReleaseLabel(CharSequence releaseLabel, Mode mode) {
 		getLoadingLayoutProxy(mode.showHeaderLoadingLayout(), mode.showFooterLoadingLayout()).setReleaseLabel(
@@ -570,7 +594,10 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	/**
 	 * Used internally for adding view. Need because we override addView to
 	 * pass-through to the Refreshable View
-	 */
+	 * @param child child
+	 * @param index  index
+	 * @param params  params
+     */
 	protected final void addViewInternal(View child, int index, ViewGroup.LayoutParams params) {
 		super.addView(child, index, params);
 	}
@@ -578,7 +605,9 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	/**
 	 * Used internally for adding view. Need because we override addView to
 	 * pass-through to the Refreshable View
-	 */
+	 * @param child  child
+	 * @param params  params
+     */
 	protected final void addViewInternal(View child, ViewGroup.LayoutParams params) {
 		super.addView(child, -1, params);
 	}
@@ -593,7 +622,12 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	/**
 	 * Used internally for {@link #getLoadingLayoutProxy(boolean, boolean)}.
 	 * Allows derivative classes to include any extra LoadingLayouts.
-	 */
+	 *
+	 * @param includeStart  includeStart
+	 * @param includeEnd  includeEnd
+     * @return  return
+     */
+
 	protected LoadingLayoutProxy createLoadingLayoutProxy(final boolean includeStart, final boolean includeEnd) {
 		LoadingLayoutProxy proxy = new LoadingLayoutProxy();
 
@@ -611,7 +645,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	 * This is implemented by derived classes to return the created View. If you
 	 * need to use a custom View (such as a custom ListView), override this
 	 * method and return an instance of your custom class.
-	 * <p/>
+	 *
 	 * Be sure to set the ID of the view in this method, especially if you're
 	 * using a ListActivity or ListFragment.
 	 * 
@@ -1488,6 +1522,8 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 		/**
 		 * onRefresh will be called for both a Pull from start, and Pull from
 		 * end
+		 *
+		 * @param refreshView  refreshView
 		 */
 		public void onRefresh(final PullToRefreshBase<V> refreshView);
 
@@ -1506,12 +1542,16 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 		/**
 		 * onPullDownToRefresh will be called only when the user has Pulled from
 		 * the start, and released.
+		 *
+		 * @param refreshView refreshView
 		 */
 		public void onPullDownToRefresh(final PullToRefreshBase<V> refreshView);
 
 		/**
 		 * onPullUpToRefresh will be called only when the user has Pulled from
 		 * the end, and released.
+		 *
+		 * @param refreshView  refreshView
 		 */
 		public void onPullUpToRefresh(final PullToRefreshBase<V> refreshView);
 

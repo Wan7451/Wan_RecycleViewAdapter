@@ -22,6 +22,6 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:25.0.0'
-    compile project(':Library')
+    compile project(':WanAdapter')
     compile 'com.android.support:recyclerview-v7:25.0.0'
 }

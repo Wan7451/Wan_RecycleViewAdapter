@@ -54,7 +54,7 @@ public class SoundPullEventListener<V extends View> implements PullToRefreshBase
 	 * Set the Sounds to be played when a Pull Event happens. You specify which
 	 * sound plays for which events by calling this method multiple times for
 	 * each event.
-	 * <p/>
+	 *
 	 * If you've already set a sound for a certain event, and add another sound
 	 * for that event, only the new sound will be played.
 	 * 
@@ -75,6 +75,8 @@ public class SoundPullEventListener<V extends View> implements PullToRefreshBase
 
 	/**
 	 * Gets the current (or last) MediaPlayer instance.
+	 *
+	 * @return mediaplayer
 	 */
 	public MediaPlayer getCurrentMediaPlayer() {
 		return mCurrentMediaPlayer;

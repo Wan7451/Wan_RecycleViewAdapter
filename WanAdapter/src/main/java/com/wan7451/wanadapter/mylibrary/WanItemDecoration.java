@@ -11,7 +11,6 @@ import android.view.View;
 
 
 /**
- * 分割线
  * Created by WangGang on 2015/6/27.
  */
 public class WanItemDecoration extends RecyclerView.ItemDecoration {
@@ -24,7 +23,7 @@ public class WanItemDecoration extends RecyclerView.ItemDecoration {
 
     public static final int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
 
-    private Drawable mDivider;
+    private final Drawable mDivider;
 
     private int mOrientation;
 
@@ -40,11 +39,6 @@ public class WanItemDecoration extends RecyclerView.ItemDecoration {
         return isShowFirstItemDecoration;
     }
 
-    /**
-     * 设置是否显示第一行分割线
-     *
-     * @param isShowFirstItemDecoration false 不显示
-     */
     public void setIsShowFirstItemDecoration(boolean isShowFirstItemDecoration) {
         this.isShowFirstItemDecoration = isShowFirstItemDecoration;
     }
@@ -53,11 +47,6 @@ public class WanItemDecoration extends RecyclerView.ItemDecoration {
         return isShowSecondItemDecoration;
     }
 
-    /**
-     * 设置是否显示第二行分割线
-     *
-     * @param isShowSecondItemDecoration false 不显示
-     */
     public void setIsShowSecondItemDecoration(boolean isShowSecondItemDecoration) {
         this.isShowSecondItemDecoration = isShowSecondItemDecoration;
     }
@@ -76,23 +65,11 @@ public class WanItemDecoration extends RecyclerView.ItemDecoration {
         mOrientation = orientation;
     }
 
-    /**
-     * 设置  分割线左边边距
-     *
-     * @param dp
-     * @return
-     */
     public WanItemDecoration setMarginLeftDP(int dp) {
         leftMargin = dp;
         return this;
     }
 
-    /**
-     * 设置  分割线右边边距
-     *
-     * @param dp
-     * @return
-     */
     public WanItemDecoration setMarginRightDP(int dp) {
         this.rightMargit = dp;
         return this;
@@ -118,9 +95,9 @@ public class WanItemDecoration extends RecyclerView.ItemDecoration {
     }
 
 
-    public void drawVertical(Canvas c, RecyclerView parent) {
-        final int left = parent.getPaddingLeft() + DensityUtil.dip2px(parent.getContext(), leftMargin);
-        final int right = parent.getWidth() - parent.getPaddingRight() - DensityUtil.dip2px(parent.getContext(), rightMargit);
+    private void drawVertical(Canvas c, RecyclerView parent) {
+        final int left = parent.getPaddingLeft() + dip2px(parent.getContext(), leftMargin);
+        final int right = parent.getWidth() - parent.getPaddingRight() - dip2px(parent.getContext(), rightMargit);
 
         final int childCount = parent.getChildCount();
         LinearLayoutManager layoutManager = getLinearLayoutManger(parent);
@@ -130,7 +107,6 @@ public class WanItemDecoration extends RecyclerView.ItemDecoration {
         int firstVisiblePosition = layoutManager.findFirstVisibleItemPosition();
         for (int i = 0; i < childCount; i++) {
             final View child = parent.getChildAt(i);
-            android.support.v7.widget.RecyclerView v = new android.support.v7.widget.RecyclerView(parent.getContext());
             final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
                     .getLayoutParams();
             final int top = child.getBottom() + params.bottomMargin;
@@ -152,7 +128,7 @@ public class WanItemDecoration extends RecyclerView.ItemDecoration {
         }
     }
 
-    public void drawHorizontal(Canvas c, RecyclerView parent) {
+    private void drawHorizontal(Canvas c, RecyclerView parent) {
         final int top = parent.getPaddingTop();
         final int bottom = parent.getHeight() - parent.getPaddingBottom();
         LinearLayoutManager layoutManager = getLinearLayoutManger(parent);
@@ -189,6 +165,11 @@ public class WanItemDecoration extends RecyclerView.ItemDecoration {
         } else {
             outRect.set(0, 0, mDivider.getIntrinsicWidth(), 0);
         }
+    }
+
+    private static int dip2px(Context context, float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
     }
 
 }

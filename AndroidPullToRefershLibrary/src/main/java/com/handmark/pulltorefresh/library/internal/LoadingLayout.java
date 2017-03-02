@@ -328,6 +328,8 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
 
 	/**
 	 * Callbacks for derivative Layouts
+	 *
+	 * @return Layouts
 	 */
 
 	protected abstract int getDefaultDrawableResId();

@@ -9,38 +9,25 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 可以添加多个透视图、尾视图的适配器
- * 只需重写简单方法即可
- * 需要 DmlViewHolder 配合
- * Created by WangGang on 2015/6/27.
- */
 public abstract class WanAdapter<T> extends RecyclerView.Adapter<WanViewHolder> {
 
 
-    private ArrayList<View> mHeaderViews = new ArrayList<>(); //头视图
-    private ArrayList<View> mFooterViews = new ArrayList<>();   //尾视图
+    private final ArrayList<View> mHeaderViews = new ArrayList<>(); //头视图
+    private final ArrayList<View> mFooterViews = new ArrayList<>();   //尾视图
 
-    private ArrayList<Integer> mHeaderViewTypes = new ArrayList<>();
-    private ArrayList<Integer> mFooterViewTypes = new ArrayList<>();
+    private final ArrayList<Integer> mHeaderViewTypes = new ArrayList<>();
+    private final ArrayList<Integer> mFooterViewTypes = new ArrayList<>();
 
     private static final int TYPE_OFFSET = 29175;
 
 
-    protected LayoutInflater mInflater;
-    protected Context mContext;
-    protected List<T> mDatas;
-    protected final int mItemLayoutId;
+    private LayoutInflater mInflater;
+    private Context mContext;
+    private List<T> mDatas;
+    private final int mItemLayoutId;
 
 
 
-    /**
-     * 构造器
-     *
-     * @param context
-     * @param mDatas
-     * @param itemLayoutId
-     */
     protected WanAdapter(Context context, List<T> mDatas, int itemLayoutId) {
         this.mContext = context;
         this.mInflater = LayoutInflater.from(mContext);
@@ -52,12 +39,10 @@ public abstract class WanAdapter<T> extends RecyclerView.Adapter<WanViewHolder> 
     @Override
     public int getItemViewType(int position) {
         if (mHeaderViews.size() > 0 && position < mHeaderViews.size()) {
-            //返回 HeaderView 的 ViewType
             return getHeaderViewType(position);
         }
 
         if (mFooterViews.size() > 0 && position > getDataCount() - 1 + mHeaderViews.size()) {
-            //返回 FooterView 的 ViewType标记
             return getFooterViewType(position);
         }
 
@@ -94,11 +79,6 @@ public abstract class WanAdapter<T> extends RecyclerView.Adapter<WanViewHolder> 
 
 
 
-    /**
-     * Item页布局类型个数，默认为1
-     * @param position
-     * @return
-     */
     protected int getViewType(int position) {
         return 1;
     }
@@ -111,23 +91,10 @@ public abstract class WanAdapter<T> extends RecyclerView.Adapter<WanViewHolder> 
         convert(holder, mDatas.get(i));
     }
 
-    /**
-     * 设置每个页面显示的内容
-     *
-     * @param holder itemHolder
-     * @param item   每一Item显示的数据
-     */
     public abstract void convert(WanViewHolder holder, T item);
 
 
 
-    /**
-     * 创建ViewHolder
-     *
-     * @param parent   RecycleView对象
-     * @param viewType viee类型
-     * @return Holder对象
-     */
     private WanViewHolder onCreateWanViewHolder(ViewGroup parent, int viewType) {
         View v = mInflater.inflate(mItemLayoutId, null, false);
         return new WanViewHolder(v, this);
@@ -197,25 +164,17 @@ public abstract class WanAdapter<T> extends RecyclerView.Adapter<WanViewHolder> 
     }
 
     public void setDatas(List<T> mDatas) {
+        if(mDatas==null)
+            throw new RuntimeException("mDatas can not be null!");
         this.mDatas = mDatas;
         notifyDataSetChanged();
     }
 
 
-    /**
-     * 可以添加多个头视图
-     *
-     * @param headerView
-     */
     public void addHeaderView(View headerView) {
         mHeaderViews.add(headerView);
     }
 
-    /**
-     * 可以添加多个尾视图
-     *
-     * @param footerView 尾视图
-     */
     public void addFooterView(View footerView) {
         mFooterViews.add(footerView);
     }
@@ -236,11 +195,6 @@ public abstract class WanAdapter<T> extends RecyclerView.Adapter<WanViewHolder> 
         return l;
     }
 
-    /**
-     * 设置点击事件监听器
-     *
-     * @param l 监听器对象
-     */
     public void setOnItemClickListener(OnItemClickListener l) {
         this.l = l;
     }

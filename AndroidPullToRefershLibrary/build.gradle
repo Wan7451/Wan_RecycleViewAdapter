@@ -1,11 +1,12 @@
 apply plugin: 'com.android.library'
+//apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
-        minSdkVersion 4
+        minSdkVersion 10
         targetSdkVersion 25
     }
 
@@ -15,4 +16,22 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+
+    lintOptions{
+        abortOnError false
+    }
+
+    dependencies {
+        compile fileTree(include: ['*.jar'], dir: 'libs')
+
+    }
 }
+
+//publish {
+//    userOrg = 'wan410689330'//bintray.com用户名
+//    groupId = 'com.wan7451'//jcenter上的路径
+//    artifactId = 'pulltorefresh'//项目名称
+//    publishVersion = '1.0.0'//版本号
+//    desc = 'recycleview pulltorefresh lib'//描述，不重要
+//    website = 'https://github.com/Wan7451/Wan_RecycleViewAdapter'//网站，最好有，不重要
+//}
