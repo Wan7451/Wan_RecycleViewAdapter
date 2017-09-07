@@ -12,9 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.wan7451.wanadapter.mylibrary.PulltoRefreshRecycleView;
+import com.wan7451.wanadapter.mylibrary.SimpleWanAdapter;
 import com.wan7451.wanadapter.mylibrary.WanAdapter;
 import com.wan7451.wanadapter.mylibrary.WanItemDecoration;
+import com.wan7451.wanadapter.mylibrary.WanPulltoRefreshRecycleView;
 import com.wan7451.wanadapter.mylibrary.WanViewHolder;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements WanAdapter.OnItem
 
     private ArrayList<String> data = new ArrayList<>();
     private WGAdapter adapter;
-    private PulltoRefreshRecycleView mainView;
+    private WanPulltoRefreshRecycleView mainView;
 
 
     @Override
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements WanAdapter.OnItem
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mainView = (PulltoRefreshRecycleView) findViewById(R.id.mianView);
+        mainView = (WanPulltoRefreshRecycleView) findViewById(R.id.mianView);
 
         adapter = new WGAdapter(this, data, android.R.layout.simple_list_item_1);
         mainView.getRefreshableView().setAdapter(adapter);
@@ -109,28 +110,23 @@ public class MainActivity extends AppCompatActivity implements WanAdapter.OnItem
         }, 300);
     }
 
+
     @Override
-    public void onItemClickListener(int posotion) {
-        Toast.makeText(this, data.get(posotion), Toast.LENGTH_LONG).show();
+    public void onItemClickListener(int posotion, Object data) {
+        Toast.makeText(this, data.toString(), Toast.LENGTH_LONG).show();
     }
 
-    class WGAdapter extends WanAdapter<String> {
+    class WGAdapter extends SimpleWanAdapter<String> {
 
 
         protected WGAdapter(Context context, List<String> mDatas, int itemLayoutId) {
             super(context, mDatas, itemLayoutId);
         }
 
-        /**
-         * @param holder itemHolder
-         * @param item   每一Item显示的数据
-         */
         @Override
-        public void convert(WanViewHolder holder, String item) {
-            //holder.setText(android.R.id.text1, item);
-            //或者
+        protected void onBindWanViewHolder(WanViewHolder holder, int position) {
             TextView text = holder.getView(android.R.id.text1);
-            text.setText(item);
+            text.setText(mDatas.get(position));
         }
     }
 

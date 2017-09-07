@@ -9,21 +9,21 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 /**
  * Created by Hello on 2015/6/30.
  */
-public class PulltoRefreshRecycleView extends PullToRefreshBase<RecyclerView> {
+public class WanPulltoRefreshRecycleView extends PullToRefreshBase<RecyclerView> {
 
-    public PulltoRefreshRecycleView(Context context) {
+    public WanPulltoRefreshRecycleView(Context context) {
         super(context);
     }
 
-    public PulltoRefreshRecycleView(Context context, AttributeSet attrs) {
+    public WanPulltoRefreshRecycleView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public PulltoRefreshRecycleView(Context context, Mode mode) {
+    public WanPulltoRefreshRecycleView(Context context, Mode mode) {
         super(context, mode);
     }
 
-    public PulltoRefreshRecycleView(Context context, Mode mode, AnimationStyle animStyle) {
+    public WanPulltoRefreshRecycleView(Context context, Mode mode, AnimationStyle animStyle) {
         super(context, mode, animStyle);
     }
 
