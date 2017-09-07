@@ -12,9 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.wan7451.wanadapter.mylibrary.PulltoRefreshRecycleView;
 import com.wan7451.wanadapter.mylibrary.WanAdapter;
 import com.wan7451.wanadapter.mylibrary.WanItemDecoration;
-import com.wan7451.wanadapter.mylibrary.WanRecycleView;
 import com.wan7451.wanadapter.mylibrary.WanViewHolder;
 
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements WanAdapter.OnItem
 
     private ArrayList<String> data = new ArrayList<>();
     private WGAdapter adapter;
-    private WanRecycleView mainView;
+    private PulltoRefreshRecycleView mainView;
 
 
     @Override
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements WanAdapter.OnItem
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mainView = (WanRecycleView) findViewById(R.id.mianView);
+        mainView = (PulltoRefreshRecycleView) findViewById(R.id.mianView);
 
         adapter = new WGAdapter(this, data, android.R.layout.simple_list_item_1);
         mainView.getRefreshableView().setAdapter(adapter);
