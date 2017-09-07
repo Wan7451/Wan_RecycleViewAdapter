@@ -2,4 +2,6 @@
     <color name="divider_color">#CBB39F</color>
 
     <item name="recycleView" type="id"/>
+
+    <string name="load_more_text">loading...</string>
 </resources>

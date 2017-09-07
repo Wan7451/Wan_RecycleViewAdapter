@@ -6,112 +6,86 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 可以添加 Header,Footer的Adapter
+ */
 public abstract class WanAdapter<T> extends RecyclerView.Adapter<WanViewHolder> {
 
-
-    private final ArrayList<View> mHeaderViews = new ArrayList<>(); //头视图
-    private final ArrayList<View> mFooterViews = new ArrayList<>();   //尾视图
-
-    private final ArrayList<Integer> mHeaderViewTypes = new ArrayList<>();
-    private final ArrayList<Integer> mFooterViewTypes = new ArrayList<>();
-
-    private static final int TYPE_OFFSET = 29175;
-
-
+    protected Context mContext;
+    protected List<T> mDatas;
     private LayoutInflater mInflater;
-    private Context mContext;
-    private List<T> mDatas;
-    private final int mItemLayoutId;
+    private HeaderFooterViewHelper helper;
 
 
-
-    protected WanAdapter(Context context, List<T> mDatas, int itemLayoutId) {
+    protected WanAdapter(Context context, List<T> mDatas) {
         this.mContext = context;
-        this.mInflater = LayoutInflater.from(mContext);
         this.mDatas = mDatas;
-        this.mItemLayoutId = itemLayoutId;
+        helper = new HeaderFooterViewHelper();
+    }
+
+    protected WanAdapter(Context context) {
+        this.mContext = context;
+        helper = new HeaderFooterViewHelper();
+    }
+
+    public void setDatas(List<T> mDatas) {
+        if (mDatas == null)
+            throw new RuntimeException("mDatas can not be null!");
+        this.mDatas = mDatas;
+        notifyDataSetChanged();
+    }
+
+    public LayoutInflater getInflater() {
+        if (mInflater == null)
+            mInflater = LayoutInflater.from(mContext);
+        return mInflater;
+    }
+
+
+    public void addHeaderView(View headerView) {
+        helper.addHeaderView(headerView);
+    }
+
+    public void addFooterView(View footerView) {
+        helper.addFooterView(footerView);
+    }
+
+    public int getHeaderViewsCount() {
+        return helper.headerSize();
     }
 
 
     @Override
     public int getItemViewType(int position) {
-        if (mHeaderViews.size() > 0 && position < mHeaderViews.size()) {
-            return getHeaderViewType(position);
+        if (helper.isHeaderPosition(position)) {
+            return helper.getHeaderViewType(position);
         }
 
-        if (mFooterViews.size() > 0 && position > getDataCount() - 1 + mHeaderViews.size()) {
-            return getFooterViewType(position);
+        if (helper.isFooterPosition(position, getDataCount())) {
+            return helper.getFooterViewType(position);
         }
 
-        if (mHeaderViews.size() > 0) {
-            return getViewType(position - mHeaderViews.size());
+        if (helper.headerSize() > 0) {
+            return getWanViewType(position - helper.headerSize());
         }
-        return getViewType(position);
+        return getWanViewType(position);
     }
 
-
-    private int getHeaderViewType(int position) {
-        mHeaderViewTypes.add(position + TYPE_OFFSET);
-        return position + TYPE_OFFSET;
-    }
-
-    private int getHeaderViewPosition(int viewType) {
-        if (mHeaderViewTypes.contains(viewType)) {
-            return viewType - TYPE_OFFSET;
-        }
-        return -1;
-    }
-
-    private int getFooterViewType(int position) {
-        mFooterViewTypes.add(position + TYPE_OFFSET);
-        return position + TYPE_OFFSET;
-    }
-
-    private int getFooterViewPosition(int viewType) {
-        if (mFooterViewTypes.contains(viewType)) {
-            return viewType - TYPE_OFFSET;
-        }
-        return -1;
-    }
-
-
-
-    protected int getViewType(int position) {
-        return 1;
-    }
-
-    private int getDataCount() {
-        return mDatas != null ? mDatas.size() : 0;
-    }
-
-    private void onBindWanViewHolder(WanViewHolder holder, int i) {
-        convert(holder, mDatas.get(i));
-    }
-
-    public abstract void convert(WanViewHolder holder, T item);
-
-
-
-    private WanViewHolder onCreateWanViewHolder(ViewGroup parent, int viewType) {
-        View v = mInflater.inflate(mItemLayoutId, null, false);
-        return new WanViewHolder(v, this);
-    }
 
     @Override
     public WanViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        int headerPosition = getHeaderViewPosition(viewType);
+        int headerPosition = helper.getHeaderViewPosition(viewType);
         if (headerPosition != -1) {
-            return new HeaderHolder(mHeaderViews.get(headerPosition));
+            return new HeaderHolder(helper.getHeaderView(headerPosition));
         }
 
-        int footerPosition = getFooterViewPosition(viewType);
+        int footerPosition = helper.getFooterViewPosition(viewType);
         if (footerPosition != -1) {
-            int index = footerPosition - getDataCount() - mHeaderViews.size();
-            return new FooterHolder(mFooterViews.get(index));
+            int index = footerPosition - getDataCount() - helper.headerSize();
+            return new FooterHolder(helper.getFooterView(index));
         }
 
         return onCreateWanViewHolder(parent, viewType);
@@ -120,87 +94,94 @@ public abstract class WanAdapter<T> extends RecyclerView.Adapter<WanViewHolder> 
     @Override
     public void onBindViewHolder(WanViewHolder holder, int position) {
 
-        if (mFooterViews.size() > 0 && (position > getDataCount() - 1 + mHeaderViews.size())) {
+        if (helper.footerSize() > 0 &&
+                (position > getDataCount() - 1 + helper.headerSize())) {
             return;
         }
 
-        if (mHeaderViews.size() > 0) {
-            if (position < mHeaderViews.size()) {
+        if (helper.headerSize() > 0) {
+            if (position < helper.headerSize()) {
                 return;
             }
-            onBindWanViewHolder(holder, position - mHeaderViews.size());
+            onBindWanViewHolder(holder, position - helper.headerSize());
             return;
         }
         onBindWanViewHolder(holder, position);
     }
 
 
-    class HeaderHolder extends WanViewHolder {
-
-        public HeaderHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
-    class FooterHolder extends WanViewHolder {
-        public FooterHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
     @Override
     public int getItemCount() {
-        if (mHeaderViews.size() > 0 && mFooterViews.size() > 0) {
-            return getDataCount() + mHeaderViews.size() + mFooterViews.size();
+        return getDataCount() + helper.headerSize() + helper.footerSize();
+    }
+
+
+    public T getItem(int position) {
+        return mDatas.get(position);
+    }
+
+    /**
+     * ItemViewType
+     *
+     * @param position
+     * @return return  itemViewType
+     */
+    protected int getWanViewType(int position) {
+        return 0;
+    }
+
+    /**
+     * Create View Holder
+     *
+     * @param parent
+     * @param viewType
+     * @return
+     */
+    protected abstract WanViewHolder onCreateWanViewHolder(ViewGroup parent, int viewType);
+
+
+    /**
+     * bind View Holder
+     *
+     * @param holder
+     * @param position
+     */
+    protected abstract void onBindWanViewHolder(WanViewHolder holder, int position);
+
+    /**
+     * ItemCount
+     *
+     * @return return  itemCount
+     */
+    protected int getDataCount() {
+        return mDatas != null ? mDatas.size() : 0;
+    }
+
+
+    private static class HeaderHolder extends WanViewHolder {
+        HeaderHolder(View itemView) {
+            super(itemView);
         }
-        if (mHeaderViews.size() > 0) {
-            return getDataCount() + mHeaderViews.size();
+    }
+
+    private static class FooterHolder extends WanViewHolder {
+        FooterHolder(View itemView) {
+            super(itemView);
         }
-        if (mFooterViews.size() > 0) {
-            return getDataCount() + mFooterViews.size();
-        }
-
-        return getDataCount();
     }
-
-    public void setDatas(List<T> mDatas) {
-        if(mDatas==null)
-            throw new RuntimeException("mDatas can not be null!");
-        this.mDatas = mDatas;
-        notifyDataSetChanged();
-    }
-
-
-    public void addHeaderView(View headerView) {
-        mHeaderViews.add(headerView);
-    }
-
-    public void addFooterView(View footerView) {
-        mFooterViews.add(footerView);
-    }
-
-
-    public int getHeaderViewsCount() {
-        return mHeaderViews.size();
-    }
-
-    public int getFooterViewsCount() {
-        return mFooterViews.size();
-    }
-
 
     private OnItemClickListener l;
-
-    protected OnItemClickListener getItemClickListener() {
-        return l;
-    }
 
     public void setOnItemClickListener(OnItemClickListener l) {
         this.l = l;
     }
 
-    public interface OnItemClickListener {
-        void onItemClickListener(int posotion);
+    public OnItemClickListener getItemClickListener() {
+        return l;
+    }
+
+    public interface OnItemClickListener<T> {
+        void onItemClickListener(int position, T data);
     }
 
 
